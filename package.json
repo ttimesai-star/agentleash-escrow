@@ -15,7 +15,8 @@
     "demo:forged": "node scripts/demo.ts forged",
     "demo:refund-all": "node scripts/demo.ts refund-all",
     "log:export": "node scripts/log.ts export",
-    "log:verify": "node scripts/log.ts verify"
+    "log:verify": "node scripts/log.ts verify",
+    "demo:release402": "node scripts/demo.ts release402"
   },
   "dependencies": {
     "@stellar/stellar-sdk": "17.4.0"

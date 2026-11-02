@@ -4,6 +4,8 @@ import { loadKeys, stellar, readDeploy, writeDeploy, logRun, expert, CliError, U
 import { checkPay, type Cfg, type Win } from "../src/policy.ts";
 import { hashJson, signReceipt } from "../src/receipt.ts";
 import { append } from "../src/agentlog.ts";
+import { createServer } from "node:http";
+import type { AddressInfo } from "node:net";
 
 const UNIT = 10_000_000n;
 const mode = process.argv[2];
@@ -91,6 +93,45 @@ async function release() {
   record("release", { escrow: p.escrow, pay_tx: p.tx, settle_tx: st.tx, amount: String(2n * UNIT), seller_received: String(got), request_hash: p.requestHash, result_hash: s.resultHash });
 }
 
+/** Same release, over HTTP: the seller answers 402 with its terms, checks the escrow on chain, then serves and settles. */
+async function release402() {
+  const PRICE = 2n * UNIT;
+  const server = createServer((req, res) => {
+    const request = { method: req.method, path: req.url };
+    const requestHash = hashJson(request);
+    const escrow = req.headers["x-leash-escrow"] as string | undefined;
+    const reply = (code: number, body: unknown) => { res.writeHead(code, { "content-type": "application/json" }); res.end(JSON.stringify(body)); };
+    if (!escrow) return reply(402, { payee: k.seller.public, price: String(PRICE), vault: V, request_hash: requestHash, timeout_secs: 600 });
+    const p = JSON.parse(view("payment", "--escrow", escrow));
+    if (p.seller !== k.seller.public || BigInt(p.amount) < PRICE || p.status !== "Open" || p.request_hash !== requestHash) {
+      return reply(402, { error: "escrow does not pay this request", payment: p });
+    }
+    const s = sellerServe(escrow, requestHash, { q: String(req.url) });
+    reply(200, { result: s.result, result_hash: s.resultHash });
+    const st = settle(escrow, s.resultHash, s.sig); // the seller collects with its own receipt
+    record("release402", { escrow, settle_tx: st.tx, request_hash: requestHash, result_hash: s.resultHash });
+    console.log(`seller settled: tx ${expert("tx", st.tx!)}`);
+  });
+  await new Promise<void>((r) => server.listen(0, "127.0.0.1", r));
+  const url = `http://127.0.0.1:${(server.address() as AddressInfo).port}/quote/XLM-USDC`;
+  const first = await fetch(url);
+  const terms = await first.json();
+  console.log(`GET ${url} -> ${first.status} ${JSON.stringify(terms)}`);
+  if (terms.request_hash !== hashJson({ method: "GET", path: "/quote/XLM-USDC" })) throw new Error("seller quoted another request");
+  const p = agentPay(terms.payee, BigInt(terms.price), { method: "GET", path: "/quote/XLM-USDC" }, terms.timeout_secs);
+  if (!p.escrow) throw new Error(p.refused);
+  console.log(`pay     escrow ${p.escrow}
+        tx ${expert("tx", p.tx!)}`);
+  const second = await fetch(url, { headers: { "x-leash-escrow": p.escrow } });
+  const body = await second.json();
+  console.log(`GET with escrow -> ${second.status} ${JSON.stringify(body.result)}`);
+  if (hashJson(body.result) !== body.result_hash) throw new Error("result does not match its hash");
+  await new Promise((r) => setTimeout(r, 15_000)); // let the seller's settle land
+  d.runs.release402 = { ...d.runs.release402, pay_tx: p.tx };
+  writeDeploy(d);
+  server.close();
+}
+
 async function refund() {
   const req = { q: "BTC/USDC", api: "demo-quotes", nonce: now() };
   const p = agentPay(k.seller.public, 1n * UNIT, req, 60);
@@ -168,6 +209,6 @@ async function refundAll() {
   }
 }
 
-const flows: Record<string, () => Promise<void>> = { release, refund, refused, forged, "refund-all": refundAll };
+const flows: Record<string, () => Promise<void>> = { release, release402, refund, refused, forged, "refund-all": refundAll };
 if (!flows[mode]) throw new Error(`usage: demo.ts <${Object.keys(flows).join("|")}> [--force-chain]`);
 await flows[mode]();
