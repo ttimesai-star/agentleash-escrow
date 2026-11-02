@@ -336,7 +336,8 @@ impl LeashVault {
         if now >= w.start + c.period_secs {
             w = Window { start: now, spent: 0 };
         }
-        if w.spent + amount > c.limit {
+        let spent = w.spent.checked_add(amount).ok_or(Error::OverWindowLimit)?;
+        if spent > c.limit {
             return Err(Error::OverWindowLimit);
         }
         if !(MIN_TIMEOUT..=MAX_TIMEOUT).contains(&timeout_secs) {
@@ -349,7 +350,7 @@ impl LeashVault {
         }
 
         // State first, external calls after.
-        w.spent += amount;
+        w.spent = spent;
         env.storage().instance().set(&Key::Window, &w);
         let nonce: u64 = env.storage().instance().get(&Key::Nonce).unwrap_or(0) + 1;
         env.storage().instance().set(&Key::Nonce, &nonce);

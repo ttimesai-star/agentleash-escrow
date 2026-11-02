@@ -652,3 +652,13 @@ fn resolver_instance_ttl_is_extended_at_deploy() {
     let ttl = t.env.as_contract(&t.resolver, || t.env.storage().instance().get_ttl());
     assert_eq!(ttl, TTL_MAX);
 }
+
+/// Jules ALSH-01: with huge owner limits, spent + amount must refuse cleanly, not trap on overflow.
+#[test]
+fn window_overflow_is_a_clean_refusal() {
+    let t = setup();
+    mock(&t, &t.owner, "set_limits", (i128::MAX, PERIOD, i128::MAX).into_val(&t.env));
+    t.v.set_limits(&i128::MAX, &PERIOD, &i128::MAX);
+    pay(&t, UNIT);
+    assert_eq!(try_pay(&t, i128::MAX, 600), Err(Error::OverWindowLimit));
+}

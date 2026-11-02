@@ -17,8 +17,8 @@ const RUN = `${mode}-${Date.now()}`;
 const alog = (action: string, note: string, input: unknown, output: unknown) =>
   append("deployments/agentlog.jsonl", k.agent.secret, { agent_id: "agentleash-demo", run_id: RUN, action, tool: "leash-vault", note, input, output });
 
-const view = (fn: string, ...args: string[]) => stellar(["contract", "invoke", "--id", V, "--send", "no", "--", fn, ...args], k.agent.secret).out;
-const balance = (who: string) => BigInt(JSON.parse(stellar(["contract", "invoke", "--id", USDC_SAC, "--send", "no", "--", "balance", "--id", who], k.agent.secret).out));
+const view = (fn: string, ...args: string[]) => stellar(["contract", "invoke", "--id", V, "--send", "no", "--", fn, ...args], k.agent.public).out; // simulation only: public key, no secret
+const balance = (who: string) => BigInt(JSON.parse(stellar(["contract", "invoke", "--id", USDC_SAC, "--send", "no", "--", "balance", "--id", who], k.agent.public).out));
 const now = () => Math.floor(Date.now() / 1000);
 const sleep = (s: number) => new Promise((r) => setTimeout(r, s * 1000));
 const fmt = (x: bigint) => `${x / UNIT}.${(x % UNIT).toString().padStart(7, "0")}`;
@@ -114,6 +114,7 @@ async function release402() {
   });
   await new Promise<void>((r) => server.listen(0, "127.0.0.1", r));
   const url = `http://127.0.0.1:${(server.address() as AddressInfo).port}/quote/XLM-USDC`;
+  const sellerBefore = balance(k.seller.public);
   const first = await fetch(url);
   const terms = await first.json();
   console.log(`GET ${url} -> ${first.status} ${JSON.stringify(terms)}`);
@@ -127,7 +128,8 @@ async function release402() {
   console.log(`GET with escrow -> ${second.status} ${JSON.stringify(body.result)}`);
   if (hashJson(body.result) !== body.result_hash) throw new Error("result does not match its hash");
   await new Promise((r) => setTimeout(r, 15_000)); // let the seller's settle land
-  d.runs.release402 = { ...d.runs.release402, pay_tx: p.tx };
+  d.runs.release402 = { ...d.runs.release402, pay_tx: p.tx, amount: String(PRICE), seller_received: String(balance(k.seller.public) - sellerBefore) };
+  console.log(`seller +${fmt(d.runs.release402.seller_received ? BigInt(d.runs.release402.seller_received) : 0n)} USDC`);
   writeDeploy(d);
   server.close();
 }
