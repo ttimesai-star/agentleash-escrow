@@ -1,0 +1,9 @@
+# Default gitleaks rules + one allowlist: Stellar PUBLIC account (G...) and contract (C...) addresses are not secrets.
+# Secret seeds (S...) are not allowlisted.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Stellar public addresses"
+regexTarget = "secret"
+regexes = ['''^[GC][A-Z2-7]{55}$''']
