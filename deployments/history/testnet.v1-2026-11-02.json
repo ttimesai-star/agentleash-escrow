@@ -1,0 +1,91 @@
+{
+  "network": "testnet",
+  "deployed_at": "2026-11-02T18:38:45.646Z",
+  "vault": "CCSJFYJTKCG44FSEA5UERZOOXXROJFEKHUNHB7TJJLA6TZJSCX6JWXKU",
+  "resolver": "CCIIWX3M7IEGSCB7TT3Y4O34WQ4NQNXYHXLEZYETX6NFEU6TQIOCTGDM",
+  "vault_wasm_hash": "0b377167bda3c1aa4a9c2d6b95d6cefc10627c183442be6d2c83d6682905600f",
+  "resolver_wasm_hash": "184f12c8929ff4f9441a6ba972284355bbd97239f73c1faf1af0cc4077d7f329",
+  "tw_wasm_hash": "7c3f7b2af92ad86092708b23babf80f9e1308d7f3ce18b703b9499192ecc934b",
+  "tw_fee": "GA6KH5VWPCHBOEF63X57SPX6T4H366YFFKKGCVDBTXT2N7JVL6PJCK7G",
+  "token": "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA",
+  "owner": "GD7CU2FSRM7DOS5ZGL6PT5HLKLXCS6CJLWO43VQBOGZVKOEC76HVN75E",
+  "agent": "GBDRN2JEYBQKNQAPHTXQI2X3UOKJUE53XW3WW75CL6OA2EK6BFDTF3JU",
+  "seller": "GDZC6GLQNUTKAMJ5BRHT6QZ7ONEOY4IVLZ6A537MKVPM3WCSMBKVIFS5",
+  "limits": {
+    "limit": "250000000",
+    "period_secs": 3600,
+    "max_per_call": "100000000",
+    "agent_valid_until": 1796236667
+  },
+  "txs": {
+    "upload_leash_resolver": "c14edf927b25acb986334b882e8f41c46a1781ad18295eee59440ed7e0e3bc7e",
+    "deploy_vault": "987da40fac37272ad658d33e4e2729bbaaee757585e570406dea760529f6f949",
+    "deploy_resolver": "75de43e1b1660853e6a2f203dc175d435ea907c6f4dba7281640c7731cf1630d",
+    "set_payee": "1db538e8cc0b2a757dd2a1e15b5c4a99a5aa531cca46959b26d2676b6af08975",
+    "fund_vault": "785cbb77b3516f4cf554812f5e26c128abd2daf4a4dcd90c6eb53b4a16a92a4f"
+  },
+  "runs": {
+    "release402": {
+      "at": "2026-11-02T18:40:55.536Z",
+      "escrow": "CCNI3MD3TVDFRRYX47I6X6WC5N7JGBTRRGS7J7CTK6CDSHLLKJ3PEEME",
+      "settle_tx": "666fa448cb18e2113d0d716e24b12490c5a9c1087608dbe7e39e6ec57091aaed",
+      "request_hash": "1c749ff46c875bd74620cd3cae22df5ed7d394bd4214b78a5fe0d1258e9d2e7c",
+      "result_hash": "5634aee8abab8e828e7e0348d280896da9a584d44f0d0836f41f2b0cd0e47a4f",
+      "pay_tx": "41f2503e85c61f2bb737f4f0faa72248bb4dce09bf96d3fc4643bdc93fa57b45",
+      "amount": "20000000",
+      "seller_received": "19940000"
+    },
+    "release": {
+      "at": "2026-11-02T18:43:46.646Z",
+      "escrow": "CBPOKEMXS2UWB3BBJST7P6HCTVCYXYJDO5CTB5X4GJY5KNKAW3MREYYD",
+      "pay_tx": "b520fea490bd8f32fa2c0b1298b8af784fee4cecc6ef6942d9c59ae1a2408ede",
+      "settle_tx": "6b695e6b0291ce01a627c34282b6bf5a197a62515aff0a774180e2f49995a2e9",
+      "amount": "20000000",
+      "seller_received": "19940000",
+      "request_hash": "676f7928b934294019e3f2a1d2e2769a95b6ea7092b9336005a2a6122ad00c92",
+      "result_hash": "ef517b6507c477f703f17c75fb0f9229347f9af42e3edb2b9eb6cd0e81407697"
+    },
+    "refund": {
+      "at": "2026-11-02T18:47:06.782Z",
+      "escrow": "CC7334MZH4OGY2XTZ3SNIRBAX3INQWMXXNPZTX6PJKZTOHS5IWCLEOGQ",
+      "pay_tx": "bc1162981f072fb077543b5617d6a9a4156a4009c9e85e601d13be7fffd4ae8d",
+      "refund_tx": "8054959bd5b5828c2d2ceebe7d667b8215b4fa5d10c90721de189daa6ee79ade",
+      "amount": "10000000",
+      "vault_returned": "9970000",
+      "settle_after_deadline": "Error(Contract, #11)",
+      "settle_after_refund": "Error(Contract, #10)"
+    },
+    "forged": {
+      "at": "2026-11-02T18:49:07.940Z",
+      "escrow": "CDXVPURKAXES5FRLQ4ALUWS7AFWUJ4NZRT2CGXZJSPDKEYI5GXDKASBS",
+      "pay_tx": "df6fed6725ec502205d85f29ccf51bbd51bc367e81495b6316785a9969c08910",
+      "settle_tx": "8155fbc2d21c4bbfa334d944ac9755947e23a41cd7336f80390e73a2393fa5c5",
+      "wrong_key": "Error(Crypto, InvalidInput) (failed ED25519 verification)",
+      "other_result_hash": "Error(Crypto, InvalidInput) (failed ED25519 verification)",
+      "receipt_for_other_escrow": "Error(Crypto, InvalidInput) (failed ED25519 verification)",
+      "genuine_receipt": "settled, tx 8155fbc2d21c4bbfa334d944ac9755947e23a41cd7336f80390e73a2393fa5c5"
+    },
+    "refused": {
+      "at": "2026-11-02T18:52:06.177Z",
+      "unknown_seller": "SDK refused before signing: #3 PayeeNotAllowed — seller is not on the owner's allow-list",
+      "over_max_per_call": "SDK refused before signing: #5 OverMaxPerCall — amount 110000000 > max_per_call 100000000",
+      "over_window_limit": "SDK refused before signing: #6 OverWindowLimit — spent 160000000 + 90000001 > window limit 250000000",
+      "revoked_agent": "SDK refused before signing: #2 AgentInactive — agent key is revoked or expired",
+      "revoke_tx": "08bf0012425ee724884f7f73d066111cd5662bbc46f4ac2ffd17a1a6e96cc1ea",
+      "restore_agent_tx": "8255e3dafbf473dba40664424da9aa3ec1c4cb447ed6a2e1cb5cb1d8ef26a990",
+      "fill_escrows": [
+        "CA6FGIQKTNH6XRWF7OEWQKWEEVQP2DKCNRC6OMLREUT3XI6D4FENUAPL"
+      ]
+    },
+    "refused_chain": {
+      "at": "2026-11-02T18:54:41.619Z",
+      "unknown_seller": "chain refused: Error(Contract, #3) (SDK predicted #3 PayeeNotAllowed)",
+      "over_max_per_call": "chain refused: Error(Contract, #5) (SDK predicted #5 OverMaxPerCall)",
+      "over_window_limit": "chain refused: Error(Contract, #6) (SDK predicted #6 OverWindowLimit)",
+      "revoked_agent": "chain refused: Error(Contract, #2) (SDK predicted #2 AgentInactive)",
+      "revoke_tx": "2033e397e6f6cc5677b8f7d97aa8ab81f470acaeb8575de53bb818220de3ddd0",
+      "restore_agent_tx": "17301c0369024f7bc9ea8b3cb1e1069e1269164a7bd7a638bc3afd7b2df2fe12",
+      "fill_escrows": []
+    }
+  }
+}

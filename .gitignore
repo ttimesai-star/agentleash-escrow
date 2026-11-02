@@ -3,3 +3,4 @@ tw/*.wasm
 node_modules/
 .env
 *.secret.json
+video/_raw/

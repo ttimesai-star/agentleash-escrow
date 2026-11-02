@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>AgentLeash Escrow — testnet replay</title>
+<style>
+  html, body { margin: 0; background: #0d1117; color: #e6edf3; font: 27px/1.5 "Segoe UI", system-ui, sans-serif; }
+  #wrap { width: 1280px; height: 720px; box-sizing: border-box; padding: 42px 64px; position: relative; }
+  h1 { font-size: 44px; margin: 0 0 6px; }
+  h2 { font-size: 30px; margin: 0 0 22px; color: #7ee787; }
+  .sub { color: #8b949e; font-size: 23px; margin-bottom: 34px; }
+  .line { opacity: 0; transform: translateY(6px); transition: all .35s; margin: 14px 0; white-space: pre-wrap; }
+  .line.on { opacity: 1; transform: none; }
+  .mono { font-family: Consolas, "Cascadia Mono", monospace; font-size: 21px; color: #a5d6ff; }
+  .ok { color: #7ee787; } .bad { color: #ff7b72; } .dim { color: #8b949e; }
+  #foot { position: absolute; left: 64px; right: 64px; bottom: 26px; color: #8b949e; font-size: 16px; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div id="wrap"><div id="scene"></div><div id="foot"><span>AgentLeash Escrow · Stellar Soroban testnet · prototype, unaudited</span><span id="clock"></span></div></div>
+<script>
+const D = window.DATA; // injected by video/record.py from deployments/testnet.json
+const s = (h) => h ? h.slice(0, 8) + "…" + h.slice(-4) : "—";
+const usdc = (x) => (Number(x) / 1e7).toFixed(4);
+const r = D.runs;
+const scenes = [
+  { t: "AgentLeash Escrow", sub: "An AI agent pays for an API call. The money waits in a Trustless Work escrow until the seller signs a receipt for the result.", lines: [
+    ["Owner sets the leash in the LeashVault contract:", ""],
+    [`  ${usdc(D.limits.max_per_call)} USDC per call · ${usdc(D.limits.limit)} USDC per ${D.limits.period_secs / 60} min · allow-listed seller · agent key valid 30 days`, "mono"],
+    [`Vault     ${D.vault}`, "mono"],
+    [`Resolver  ${D.resolver}`, "mono"],
+    [`Trustless Work escrow wasm  ${s(D.tw_wasm_hash)}  (used by hash, deployed per payment)`, "mono"],
+  ]},
+  { t: "1 · Release on a signed receipt", sub: "Seller answers HTTP 402 with its terms, then serves the call once the escrow is funded.", lines: [
+    ["agent → seller   GET /quote/XLM-USDC  →  402 {price 2 USDC, payee, request_hash}", "mono"],
+    ["agent: policy check passes locally → signs pay()", ""],
+    [`escrow ${s(r.release402.escrow)}   pay tx ${s(r.release402.pay_tx)}`, "mono"],
+    ["seller: result + ed25519 receipt over (vault, escrow, request_hash, result_hash)", ""],
+    [`settle tx ${s(r.release402.settle_tx)}  →  seller +${usdc(r.release402.seller_received)} USDC (Trustless Work keeps 0.3%)`, "mono ok"],
+  ]},
+  { t: "2 · Refund on timeout", sub: "The seller stays silent. Nobody has to trust anybody: after the deadline anyone can refund.", lines: [
+    [`pay 1 USDC, timeout 60 s   escrow ${s(r.refund.escrow)}   tx ${s(r.refund.pay_tx)}`, "mono"],
+    ["… 60 s, no receipt …", "dim"],
+    [`late receipt, valid signature → ${r.refund.settle_after_deadline}  DeadlinePassed`, "mono bad"],
+    [`refund tx ${s(r.refund.refund_tx)} → vault +${usdc(r.refund.vault_returned)} USDC back (dispute → resolver → vault)`, "mono ok"],
+    [`receipt after refund → ${r.refund.settle_after_refund}  NotOpen`, "mono bad"],
+  ]},
+  { t: "3 · Refused before signing", sub: "The SDK refuses with a reason; forced on chain, the contract returns the same error code.", lines: [
+    [`unknown seller      ${r.refused_chain.unknown_seller.replace("chain refused: ", "")}`, "mono bad"],
+    [`over max per call   ${r.refused_chain.over_max_per_call.replace("chain refused: ", "")}`, "mono bad"],
+    [`over window limit   ${r.refused_chain.over_window_limit.replace("chain refused: ", "")}`, "mono bad"],
+    [`revoked agent       ${r.refused_chain.revoked_agent.replace("chain refused: ", "")}`, "mono bad"],
+  ]},
+  { t: "4 · Forged receipts", sub: "Only the seller's key, for this escrow and this exact result, releases the money.", lines: [
+    [`wrong key                 → ${r.forged.wrong_key}`, "mono bad"],
+    [`other result hash         → ${r.forged.other_result_hash}`, "mono bad"],
+    [`receipt of another escrow → ${r.forged.receipt_for_other_escrow}`, "mono bad"],
+    [`genuine receipt           → settled, tx ${s(r.forged.settle_tx)}`, "mono ok"],
+  ]},
+  { t: "Checked", sub: "Everything above is on Stellar testnet; hashes open on stellar.expert.", lines: [
+    [`${D.tests.rust} Rust tests against the real Trustless Work wasm · ${D.tests.ts} TypeScript tests`, ""],
+    [`log:verify → ${D.verify}`, "mono ok"],
+    ["Released and refunded are counted separately: a refund is not a sale.", ""],
+    ["Prototype · unaudited · testnet only · github.com/ttimesai-star/agentleash-escrow", "dim"],
+  ]},
+];
+const STEP = 1700, HOLD = 3200;
+async function play() {
+  const el = document.getElementById("scene");
+  const t0 = Date.now();
+  setInterval(() => document.getElementById("clock").textContent = ((Date.now() - t0) / 1000).toFixed(0) + " s", 250);
+  for (const sc of scenes) {
+    el.innerHTML = `<h1>${sc.t}</h1><div class="sub">${sc.sub}</div>` + sc.lines.map(([txt, cls]) => `<div class="line ${cls}"></div>`).join("");
+    const nodes = el.querySelectorAll(".line");
+    for (let i = 0; i < nodes.length; i++) {
+      await new Promise((ok) => setTimeout(ok, STEP));
+      nodes[i].textContent = sc.lines[i][0];
+      nodes[i].classList.add("on");
+    }
+    await new Promise((ok) => setTimeout(ok, HOLD));
+  }
+  window.DONE = true;
+}
+play();
+</script>
+</body>
+</html>
