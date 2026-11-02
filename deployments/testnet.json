@@ -47,14 +47,14 @@
       "settle_after_refund": "Error(Contract, #10)"
     },
     "forged": {
-      "at": "2026-11-02T17:51:05.516Z",
-      "escrow": "CCAWJM6HMZWGYFVUG5MM6QTKFWW4O3RIYFAWRVSKUMPJYH22JSZGIACR",
-      "pay_tx": "f4dba8aae5526d2a57fa3ab13ae49dd3e0f9e678dc771a6d93b31566788b84f3",
-      "settle_tx": "5827ae14c70a15b5ade15975100c7b0049701ca2f540a628ca9e93dcce3dc468",
-      "wrong_key": "   0: [Diagnostic Event] contract:CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, topics:[error, Error(Crypto, InvalidInput)], data:\"escalating error to VM trap from failed host function call: verify_sig_ed25519\" |    1: [Diagnostic Event] contract:CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, topics:[error, Error(Crypto, InvalidInput)], data:\"failed ED25519 verification\" |    2: [Diagnostic Event] topics:[fn_call, CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, settle], data:[CCAWJM6HMZWGYFVUG5MM6QTKFWW4O3RIYFAWRVSKUMPJYH22JSZGIACR, Bytes(5a19339b17f5bbb6ab150b2f4fdd5777aced4b92a51a3f731257545350835f94), Bytes(2a7ea9ce92a410b36080df01c914849ed3ea9fbb7e0518e803d1030ce255f8125dfc74f2e74dff96d592b113d4ec039a81fc78278cf04896023fee9857d69405)]",
-      "other_result_hash": "   0: [Diagnostic Event] contract:CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, topics:[error, Error(Crypto, InvalidInput)], data:\"escalating error to VM trap from failed host function call: verify_sig_ed25519\" |    1: [Diagnostic Event] contract:CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, topics:[error, Error(Crypto, InvalidInput)], data:\"failed ED25519 verification\" |    2: [Diagnostic Event] topics:[fn_call, CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, settle], data:[CCAWJM6HMZWGYFVUG5MM6QTKFWW4O3RIYFAWRVSKUMPJYH22JSZGIACR, Bytes(96678dc97e31155cc8be010bdba948f429451032637c4287b4d917f40d1fa6c6), Bytes(2c1154e3a05242d8f0c0acefb20891b1a63d471ce3bccf783877c2a4e6ebc0468a503c0cbdcfb790bd3c4b7f331c34749e4443e3c6d143086a5db219e0f86606)]",
-      "receipt_for_other_escrow": "   0: [Diagnostic Event] contract:CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, topics:[error, Error(Crypto, InvalidInput)], data:\"escalating error to VM trap from failed host function call: verify_sig_ed25519\" |    1: [Diagnostic Event] contract:CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, topics:[error, Error(Crypto, InvalidInput)], data:\"failed ED25519 verification\" |    2: [Diagnostic Event] topics:[fn_call, CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, settle], data:[CCAWJM6HMZWGYFVUG5MM6QTKFWW4O3RIYFAWRVSKUMPJYH22JSZGIACR, Bytes(5a19339b17f5bbb6ab150b2f4fdd5777aced4b92a51a3f731257545350835f94), Bytes(6162c038cde704afc8b5ba98574a04d48b334bdb644bff91da10227736627947c2123a277046999e8663b6b5d3cc914e1fb1278197b05983badeedde0a5de80d)]",
-      "genuine_receipt": "settled, tx 5827ae14c70a15b5ade15975100c7b0049701ca2f540a628ca9e93dcce3dc468"
+      "at": "2026-11-02T18:02:45.405Z",
+      "escrow": "CAAPCCFWJM7JPW4L6EEUT2WECUCFTHL2RKHVAL4V36GOTF45BJSDAYJN",
+      "pay_tx": "fcfb4ff803e1084365049efb9f35e69ad7cee5dde4d69dc19e89827fc2870572",
+      "settle_tx": "076b664c74c709b4960f489df44084224239b48f44f076f1d8e3a2ce97c8d41f",
+      "wrong_key": "Error(Crypto, InvalidInput) (failed ED25519 verification)",
+      "other_result_hash": "Error(Crypto, InvalidInput) (failed ED25519 verification)",
+      "receipt_for_other_escrow": "Error(Crypto, InvalidInput) (failed ED25519 verification)",
+      "genuine_receipt": "settled, tx 076b664c74c709b4960f489df44084224239b48f44f076f1d8e3a2ce97c8d41f"
     },
     "refused": {
       "at": "2026-11-02T17:54:52.148Z",
