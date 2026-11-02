@@ -13,7 +13,9 @@
     "demo:refund": "node scripts/demo.ts refund",
     "demo:refused": "node scripts/demo.ts refused",
     "demo:forged": "node scripts/demo.ts forged",
-    "demo:refund-all": "node scripts/demo.ts refund-all"
+    "demo:refund-all": "node scripts/demo.ts refund-all",
+    "log:export": "node scripts/log.ts export",
+    "log:verify": "node scripts/log.ts verify"
   },
   "dependencies": {
     "@stellar/stellar-sdk": "17.4.0"

@@ -33,5 +33,5 @@ export function receiptDigest(vault: string, escrow: string, requestHash: string
 }
 
 export function signReceipt(sellerSecret: string, vault: string, escrow: string, requestHash: string, resultHash: string): string {
-  return Keypair.fromSecret(sellerSecret).sign(receiptDigest(vault, escrow, requestHash, resultHash)).toString("hex");
+  return Buffer.from(Keypair.fromSecret(sellerSecret).sign(receiptDigest(vault, escrow, requestHash, resultHash))).toString("hex");
 }

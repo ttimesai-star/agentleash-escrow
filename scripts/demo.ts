@@ -3,6 +3,7 @@
 import { loadKeys, stellar, readDeploy, writeDeploy, logRun, expert, CliError, USDC_SAC } from "./lib.ts";
 import { checkPay, type Cfg, type Win } from "../src/policy.ts";
 import { hashJson, signReceipt } from "../src/receipt.ts";
+import { append } from "../src/agentlog.ts";
 
 const UNIT = 10_000_000n;
 const mode = process.argv[2];
@@ -10,6 +11,9 @@ const force = process.argv.includes("--force-chain");
 const k = loadKeys();
 const d = readDeploy();
 const V = d.vault;
+const RUN = `${mode}-${Date.now()}`;
+const alog = (action: string, note: string, input: unknown, output: unknown) =>
+  append("deployments/agentlog.jsonl", k.agent.secret, { agent_id: "agentleash-demo", run_id: RUN, action, tool: "leash-vault", note, input, output });
 
 const view = (fn: string, ...args: string[]) => stellar(["contract", "invoke", "--id", V, "--send", "no", "--", fn, ...args], k.agent.secret).out;
 const balance = (who: string) => BigInt(JSON.parse(stellar(["contract", "invoke", "--id", USDC_SAC, "--send", "no", "--", "balance", "--id", who], k.agent.secret).out));
@@ -32,14 +36,21 @@ function agentPay(seller: string, amount: bigint, request: unknown, timeout: num
   const { cfg, win } = readPolicy();
   const allowed = view("payee", "--seller", seller) !== "null";
   const refusal = checkPay(cfg, win, allowed, balance(V), amount, timeout, now());
-  if (refusal && !force) return { refused: `SDK refused before signing: #${refusal.code} ${refusal.name} — ${refusal.reason}`, requestHash };
+  const input = { seller, amount: String(amount), request_hash: requestHash, timeout };
+  if (refusal && !force) {
+    alog("pay.refused", `local #${refusal.code} ${refusal.name}`, input, refusal);
+    return { refused: `SDK refused before signing: #${refusal.code} ${refusal.name} — ${refusal.reason}`, requestHash };
+  }
   try {
     const r = stellar(
       ["contract", "invoke", "--id", V, "--", "pay", "--seller", seller, "--amount", String(amount), "--request_hash", requestHash, "--timeout_secs", String(timeout)],
       k.agent.secret,
     );
-    return { escrow: JSON.parse(r.out) as string, tx: r.tx, requestHash };
+    const escrow = JSON.parse(r.out) as string;
+    alog("pay", `escrow ${escrow}`, input, { escrow, tx: r.tx });
+    return { escrow, tx: r.tx, requestHash };
   } catch (e) {
+    alog("pay.refused", `chain ${contractErr(e)}`, input, { error: contractErr(e) });
     return { refused: `chain refused: ${contractErr(e)}${refusal ? ` (SDK predicted #${refusal.code} ${refusal.name})` : ""}`, requestHash };
   }
 }
@@ -86,6 +97,7 @@ async function refund() {
   try { settle(p.escrow, late.resultHash, late.sig); lateErr = "UNEXPECTED: settled after deadline"; } catch (e) { lateErr = contractErr(e); }
   console.log(`settle after deadline, valid receipt -> ${lateErr} (DeadlinePassed = #11)`);
   const r = stellar(["contract", "invoke", "--id", V, "--", "refund", "--escrow", p.escrow], k.agent.secret);
+  alog("refund", `escrow ${p.escrow}`, { escrow: p.escrow }, { tx: r.tx });
   const back = balance(V) - vaultAfterPay;
   let afterErr = "";
   try { settle(p.escrow, late.resultHash, late.sig); afterErr = "UNEXPECTED: settled after refund"; } catch (e) { afterErr = contractErr(e); }
@@ -143,6 +155,7 @@ async function refundAll() {
   for (const e of fills) {
     try {
       const r = stellar(["contract", "invoke", "--id", V, "--", "refund", "--escrow", e], k.agent.secret);
+      alog("refund", `escrow ${e}`, { escrow: e }, { tx: r.tx });
       console.log(`refund ${e} tx ${r.tx}`);
     } catch (err) { console.log(`refund ${e}: ${contractErr(err)}`); }
   }

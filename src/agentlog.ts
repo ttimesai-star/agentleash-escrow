@@ -30,7 +30,7 @@ export function append(
     prev_entry_hash: prev ? prev.entry_hash : ZERO, timestamp: Date.now(), signer: kp.publicKey(),
   };
   const entry_hash = "0x" + sha256(body(base)).toString("hex");
-  const sig = kp.sign(Buffer.from(`agentlog:v1:${entry_hash}`)).toString("hex");
+  const sig = Buffer.from(kp.sign(Buffer.from(`agentlog:v1:${entry_hash}`))).toString("hex");
   const e: Entry = { ...base, entry_hash, sig };
   appendFileSync(file, JSON.stringify(e) + "\n");
   return e;
