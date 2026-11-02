@@ -2,7 +2,7 @@ extern crate std;
 
 use super::*;
 use ed25519_dalek::{Signer, SigningKey};
-use soroban_sdk::testutils::{Address as _, Ledger, MockAuth, MockAuthInvoke};
+use soroban_sdk::testutils::{Address as _, Events, Ledger, MockAuth, MockAuthInvoke};
 use soroban_sdk::token::{StellarAssetClient, TokenClient};
 
 const T0: u64 = 1_000_000;
@@ -604,4 +604,43 @@ fn receipt_digest_matches_ts_vector() {
         hex.push_str(&std::format!("{:02x}", b));
     }
     assert_eq!(hex, expected);
+}
+
+// ---------------------------------------------------------------- events (audit trail)
+
+fn ev(t: &T, e: &impl soroban_sdk::events::Event) -> soroban_sdk::xdr::ContractEvent {
+    e.to_xdr(&t.env, &t.vault)
+}
+
+#[test]
+fn every_flow_emits_its_vault_event() {
+    let t = setup();
+    let rh = h(&t.env, 1);
+    mock(&t, &t.agent, "pay", (t.seller.clone(), UNIT, rh.clone(), 600u64).into_val(&t.env));
+    let e = t.v.pay(&t.seller, &UNIT, &rh, &600);
+    let paid = Paid { escrow: e.clone(), seller: t.seller.clone(), amount: UNIT, request_hash: rh, deadline: T0 + 600 };
+    assert_eq!(t.env.events().all().filter_by_contract(&t.vault), [ev(&t, &paid)]);
+
+    let r = h(&t.env, 9);
+    let sig = sign(&t, &e, &r);
+    t.v.settle(&e, &r, &sig);
+    let settled = Settled { escrow: e, result_hash: r, via_dispute: false };
+    assert_eq!(t.env.events().all().filter_by_contract(&t.vault), [ev(&t, &settled)]);
+
+    let e2 = pay(&t, UNIT);
+    advance(&t, 601);
+    t.v.refund(&e2);
+    assert_eq!(t.env.events().all().filter_by_contract(&t.vault), [ev(&t, &Refunded { escrow: e2 })]);
+
+    mock(&t, &t.owner, "revoke_agent", ().into_val(&t.env));
+    t.v.revoke_agent();
+    let cfg = ConfigChanged {
+        agent: t.agent.clone(),
+        agent_valid_until: T0 + 30 * 86_400,
+        revoked: true,
+        limit: LIMIT,
+        period_secs: PERIOD,
+        max_per_call: MAX_CALL,
+    };
+    assert_eq!(t.env.events().all().filter_by_contract(&t.vault), [ev(&t, &cfg)]);
 }
