@@ -590,3 +590,18 @@ fn receipt_digest_binds_every_field() {
     assert_ne!(base, receipt_digest(&t.env, &t.vault, &x, &h(&t.env, 3), &h(&t.env, 2)));
     assert_ne!(base, receipt_digest(&t.env, &t.vault, &x, &h(&t.env, 1), &h(&t.env, 3)));
 }
+
+/// Same vector is checked in test/receipt.test.ts: the TS seller and the contract hash identical bytes.
+#[test]
+fn receipt_digest_matches_ts_vector() {
+    let env = Env::default();
+    let vault = Address::from_str(&env, "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA");
+    let escrow = Address::from_str(&env, "CAILWU67NWQKJ6OKHPLUZDMMTH2CFLF2YCDBOGGGDLQPNR6NCQDXIDUX");
+    let d = receipt_digest(&env, &vault, &escrow, &h(&env, 1), &h(&env, 2));
+    let expected = "e7eb3e14b50d974478a6d3ec5af39297a27c90b6b45ba03799ce7a1aa2056346";
+    let mut hex = std::string::String::new();
+    for b in d.to_array() {
+        hex.push_str(&std::format!("{:02x}", b));
+    }
+    assert_eq!(hex, expected);
+}

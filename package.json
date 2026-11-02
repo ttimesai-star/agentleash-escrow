@@ -7,13 +7,18 @@
   "private": true,
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "deploy:testnet": "node scripts/deploy-testnet.ts",
+    "demo:release": "node scripts/demo.ts release",
+    "demo:refund": "node scripts/demo.ts refund",
+    "demo:refused": "node scripts/demo.ts refused",
+    "demo:forged": "node scripts/demo.ts forged",
+    "demo:refund-all": "node scripts/demo.ts refund-all"
   },
   "dependencies": {
     "@stellar/stellar-sdk": "17.4.0"
   },
   "devDependencies": {
-    "tsx": "^4.20.0",
     "typescript": "^5.9.0",
     "vitest": "^3.2.0",
     "@types/node": "^24.0.0"
