@@ -146,6 +146,7 @@ pub struct ConfigChanged {
 
 #[contractevent(topics = ["leash", "withdraw"])]
 pub struct Withdrawn {
+    #[topic]
     pub to: Address,
     pub amount: i128,
 }
@@ -301,6 +302,9 @@ impl LeashVault {
     /// Owner takes back free funds. Money already in escrows is not in the Vault balance.
     pub fn withdraw(env: Env, to: Address, amount: i128) {
         let c = owner_config(&env);
+        if amount <= 0 {
+            panic_with_error!(&env, Error::BadAmount);
+        }
         token::Client::new(&env, &c.token).transfer(&env.current_contract_address(), &to, &amount);
         Withdrawn { to, amount }.publish(&env);
     }

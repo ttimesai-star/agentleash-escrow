@@ -662,3 +662,13 @@ fn window_overflow_is_a_clean_refusal() {
     pay(&t, UNIT);
     assert_eq!(try_pay(&t, i128::MAX, 600), Err(Error::OverWindowLimit));
 }
+
+/// Jules ALSH-04: a zero or negative withdraw is refused and leaves no misleading event.
+#[test]
+fn withdraw_rejects_non_positive_amount() {
+    let t = setup();
+    for amt in [0i128, -1] {
+        mock(&t, &t.owner, "withdraw", (t.owner.clone(), amt).into_val(&t.env));
+        assert_eq!(t.v.try_withdraw(&t.owner, &amt), Err(Ok(Error::BadAmount.into())));
+    }
+}
