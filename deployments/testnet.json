@@ -1,0 +1,83 @@
+{
+  "network": "testnet",
+  "deployed_at": "2026-11-02T17:45:31.980Z",
+  "vault": "CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22",
+  "resolver": "CC5O7ALAX3IALML4GD3ASQGB7YEEUFL4KFR5IR5AIHRGUODZHPUSPHIP",
+  "vault_wasm_hash": "0b377167bda3c1aa4a9c2d6b95d6cefc10627c183442be6d2c83d6682905600f",
+  "resolver_wasm_hash": "4aa133ded1e9e1f9ad7d3ff2cc59352420838481d1b7d3a5754788f059e1a684",
+  "tw_wasm_hash": "7c3f7b2af92ad86092708b23babf80f9e1308d7f3ce18b703b9499192ecc934b",
+  "tw_fee": "GA6KH5VWPCHBOEF63X57SPX6T4H366YFFKKGCVDBTXT2N7JVL6PJCK7G",
+  "token": "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA",
+  "owner": "GD7CU2FSRM7DOS5ZGL6PT5HLKLXCS6CJLWO43VQBOGZVKOEC76HVN75E",
+  "agent": "GBDRN2JEYBQKNQAPHTXQI2X3UOKJUE53XW3WW75CL6OA2EK6BFDTF3JU",
+  "seller": "GDZC6GLQNUTKAMJ5BRHT6QZ7ONEOY4IVLZ6A537MKVPM3WCSMBKVIFS5",
+  "limits": {
+    "limit": "250000000",
+    "period_secs": 3600,
+    "max_per_call": "100000000",
+    "agent_valid_until": 1796233462
+  },
+  "txs": {
+    "upload_leash_resolver": "078b81eb7e961f05e4ee68ef7166c348187fe46d558cef4552d5a9068957b3bf",
+    "upload_leash_vault": "64bae2ce821df556ecdd8eb9a30af5b70ed8a31fb8ddfce0fd225156f217db8f",
+    "deploy_vault": "b23049632ea0f39396f46a33e66076bb2426f2df37cdd9c9a91f8be12ae2ab1b",
+    "deploy_resolver": "0cf3682ae81cb003dca6a02dca0b94af7ac39e8f8a73b6daa4e0074def8a0789",
+    "set_payee": "74a42f9213daa80f149e401dbb57361a49126f88df7b17df02b2a5f8ea2aeca1",
+    "fund_vault": "c7b9ec7f8175a8db7ac30578846b06d93297b59e68e6be1e8dbdc6b473b1b95e"
+  },
+  "runs": {
+    "release": {
+      "at": "2026-11-02T17:46:48.170Z",
+      "escrow": "CBXEW22KM5RJIZTS4LZ2UUC4VPCRCVQ3S5OZLKJGLRDVCSMGA4FI7H6K",
+      "pay_tx": "765cdf4eabfa022aad11ec296d250131fc15a12f87f091b841caad09d8a617d0",
+      "settle_tx": "1c530f64aebb152979bcd97587ba3fdc26111cd37ef178b0385d8fd3b7997f1b",
+      "amount": "20000000",
+      "seller_received": "19940000",
+      "request_hash": "b6914b25a95b353c1beb296d2fef031dd46f913641282a9aacb3d810a9778253",
+      "result_hash": "a15c4bfa4d258bbf106055b1c412ffe6f7af8472f79a45574b6fde444fea04c3"
+    },
+    "refund": {
+      "at": "2026-11-02T17:49:39.957Z",
+      "escrow": "CCSIXPMHDHEDYUGKUFS7JGTHVUB3PTDCG2F24S4JXE4OYJX3WDYXTDZW",
+      "pay_tx": "5731853dcf6f288e9e5d546484286e8d7accbbea980ae6651d6b685fbfbe356c",
+      "refund_tx": "dced1e2dd3708b834ced6196059ad732c5d9d4ea1592658e9cdeb0f09da8e643",
+      "amount": "10000000",
+      "vault_returned": "9970000",
+      "settle_after_deadline": "Error(Contract, #11)",
+      "settle_after_refund": "Error(Contract, #10)"
+    },
+    "forged": {
+      "at": "2026-11-02T17:51:05.516Z",
+      "escrow": "CCAWJM6HMZWGYFVUG5MM6QTKFWW4O3RIYFAWRVSKUMPJYH22JSZGIACR",
+      "pay_tx": "f4dba8aae5526d2a57fa3ab13ae49dd3e0f9e678dc771a6d93b31566788b84f3",
+      "settle_tx": "5827ae14c70a15b5ade15975100c7b0049701ca2f540a628ca9e93dcce3dc468",
+      "wrong_key": "   0: [Diagnostic Event] contract:CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, topics:[error, Error(Crypto, InvalidInput)], data:\"escalating error to VM trap from failed host function call: verify_sig_ed25519\" |    1: [Diagnostic Event] contract:CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, topics:[error, Error(Crypto, InvalidInput)], data:\"failed ED25519 verification\" |    2: [Diagnostic Event] topics:[fn_call, CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, settle], data:[CCAWJM6HMZWGYFVUG5MM6QTKFWW4O3RIYFAWRVSKUMPJYH22JSZGIACR, Bytes(5a19339b17f5bbb6ab150b2f4fdd5777aced4b92a51a3f731257545350835f94), Bytes(2a7ea9ce92a410b36080df01c914849ed3ea9fbb7e0518e803d1030ce255f8125dfc74f2e74dff96d592b113d4ec039a81fc78278cf04896023fee9857d69405)]",
+      "other_result_hash": "   0: [Diagnostic Event] contract:CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, topics:[error, Error(Crypto, InvalidInput)], data:\"escalating error to VM trap from failed host function call: verify_sig_ed25519\" |    1: [Diagnostic Event] contract:CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, topics:[error, Error(Crypto, InvalidInput)], data:\"failed ED25519 verification\" |    2: [Diagnostic Event] topics:[fn_call, CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, settle], data:[CCAWJM6HMZWGYFVUG5MM6QTKFWW4O3RIYFAWRVSKUMPJYH22JSZGIACR, Bytes(96678dc97e31155cc8be010bdba948f429451032637c4287b4d917f40d1fa6c6), Bytes(2c1154e3a05242d8f0c0acefb20891b1a63d471ce3bccf783877c2a4e6ebc0468a503c0cbdcfb790bd3c4b7f331c34749e4443e3c6d143086a5db219e0f86606)]",
+      "receipt_for_other_escrow": "   0: [Diagnostic Event] contract:CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, topics:[error, Error(Crypto, InvalidInput)], data:\"escalating error to VM trap from failed host function call: verify_sig_ed25519\" |    1: [Diagnostic Event] contract:CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, topics:[error, Error(Crypto, InvalidInput)], data:\"failed ED25519 verification\" |    2: [Diagnostic Event] topics:[fn_call, CA4FEKFU3U5OA3VUWUF4KZQW6NBTKTBYRTWLNHIROFKCHLFKWNQBHM22, settle], data:[CCAWJM6HMZWGYFVUG5MM6QTKFWW4O3RIYFAWRVSKUMPJYH22JSZGIACR, Bytes(5a19339b17f5bbb6ab150b2f4fdd5777aced4b92a51a3f731257545350835f94), Bytes(6162c038cde704afc8b5ba98574a04d48b334bdb644bff91da10227736627947c2123a277046999e8663b6b5d3cc914e1fb1278197b05983badeedde0a5de80d)]",
+      "genuine_receipt": "settled, tx 5827ae14c70a15b5ade15975100c7b0049701ca2f540a628ca9e93dcce3dc468"
+    },
+    "refused": {
+      "at": "2026-11-02T17:54:52.148Z",
+      "unknown_seller": "SDK refused before signing: #3 PayeeNotAllowed — seller is not on the owner's allow-list",
+      "over_max_per_call": "SDK refused before signing: #5 OverMaxPerCall — amount 110000000 > max_per_call 100000000",
+      "over_window_limit": "SDK refused before signing: #6 OverWindowLimit — spent 240000000 + 10000001 > window limit 250000000",
+      "revoked_agent": "SDK refused before signing: #2 AgentInactive — agent key is revoked or expired",
+      "revoke_tx": "907e6c57ab95eed4e4a75e9d740c59081eb7e10eb4bd20d236b29e397dc6ba5f",
+      "restore_agent_tx": "a185de50df52e160dec15297292c1b5a13d24cc17095bc8eee01fd9f8441f52b",
+      "fill_escrows": [
+        "CDYOU5ZMYO3MXA4PA5R7HVGRAXL2TNBVPOLHBN7EHZQCEOI2I3355IEY",
+        "CC2SM6I4HM63SDWLPLQKR2M7RUCKI2RVXJ7KCNBPPY4S5UI4OATJSZOL"
+      ]
+    },
+    "refused_chain": {
+      "at": "2026-11-02T17:59:31.914Z",
+      "unknown_seller": "chain refused: Error(Contract, #3) (SDK predicted #3 PayeeNotAllowed)",
+      "over_max_per_call": "chain refused: Error(Contract, #5) (SDK predicted #5 OverMaxPerCall)",
+      "over_window_limit": "chain refused: Error(Contract, #6) (SDK predicted #6 OverWindowLimit)",
+      "revoked_agent": "chain refused: Error(Contract, #2) (SDK predicted #2 AgentInactive)",
+      "revoke_tx": "ebc617760a738c72305c60378d8bda453cd53a94bcf13cb38badc2203d031798",
+      "restore_agent_tx": "77383f473951dbcd186ac599f43e38f5d1b95072c3343900e5c2799c1e33169f",
+      "fill_escrows": []
+    }
+  }
+}

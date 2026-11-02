@@ -20,7 +20,14 @@ const balance = (who: string) => BigInt(JSON.parse(stellar(["contract", "invoke"
 const now = () => Math.floor(Date.now() / 1000);
 const sleep = (s: number) => new Promise((r) => setTimeout(r, s * 1000));
 const fmt = (x: bigint) => `${x / UNIT}.${(x % UNIT).toString().padStart(7, "0")}`;
-const contractErr = (e: unknown) => (e instanceof CliError ? e.stderr.match(/Error\(Contract, #\d+\)/)?.[0] ?? e.stderr.split("\n").filter(Boolean).slice(-3).join(" | ") : String(e));
+const contractErr = (e: unknown) => {
+  if (!(e instanceof CliError)) return String(e);
+  const c = e.stderr.match(/Error\(Contract, #\d+\)/)?.[0];
+  if (c) return c;
+  const host = e.stderr.match(/Error\([A-Za-z]+, [A-Za-z]+\)/)?.[0];
+  const why = e.stderr.match(/data:"([^"]+)"/g)?.at(-1)?.slice(6, -1);
+  return host ? `${host}${why ? ` (${why})` : ""}` : e.stderr.split("\n").filter(Boolean).slice(-2).join(" | ");
+};
 
 function readPolicy() {
   const c = JSON.parse(view("config"));
@@ -127,7 +134,7 @@ async function refused() {
   out.revoked_agent = agentPay(k.seller.public, UNIT, req, 600).refused ?? "UNEXPECTED: paid";
   const ra = stellar(["contract", "invoke", "--id", V, "--", "set_agent", "--agent", k.agent.public, "--valid_until", String(cfg.agent_valid_until)], k.owner.secret);
   for (const [k2, v] of Object.entries(out)) console.log(`${k2.padEnd(18)} ${v}`);
-  console.log(`(window filled with ${fills.length} escrows of max_per_call; refund them after 60 s with npm run refund:all)`);
+  console.log(`(window filled with ${fills.length} escrows of max_per_call; refund them after 60 s with npm run demo:refund-all)`);
   record(force ? "refused_chain" : "refused", { ...out, revoke_tx: rv.tx, restore_agent_tx: ra.tx, fill_escrows: fills });
 }
 
