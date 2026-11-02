@@ -1,0 +1,19 @@
+[package]
+name = "leash-vault"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+publish = false
+
+[lib]
+# rlib only: a cdylib with soroban testutils overflows the windows-gnu export table; `stellar contract build` adds --crate-type=cdylib itself
+crate-type = ["lib"]
+doctest = false
+
+[dependencies]
+soroban-sdk = { workspace = true }
+
+[dev-dependencies]
+soroban-sdk = { workspace = true, features = ["testutils"] }
+leash-resolver = { path = "../leash-resolver" }
+ed25519-dalek = "2"

@@ -1,0 +1,21 @@
+{
+  "name": "agentleash-escrow",
+  "version": "0.1.0",
+  "description": "Spending leash for AI agents on Stellar Soroban: policy vault + Trustless Work escrow + seller receipts. Prototype, unaudited, testnet only.",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "17.4.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0",
+    "@types/node": "^24.0.0"
+  }
+}
