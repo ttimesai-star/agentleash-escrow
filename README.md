@@ -83,6 +83,38 @@ npm run demo:release402 && npm run demo:release && npm run demo:refund && npm ru
 npm run log:export && npm run log:verify
 ```
 
+## Try it with your own keys (testnet, about 5 minutes, no Rust)
+
+One command runs a full session on Stellar **testnet** with keys made on your machine: your own LeashVault and
+LeashResolver are deployed from the wasm already uploaded to testnet (the code of commit `250a428`), then one payment
+is released to the seller against its signed receipt over HTTP 402, and one is refunded because the seller stays
+silent past a 60-second deadline. Every transaction is signed by your keys; nothing touches mainnet or real money.
+
+Needs: Node 24, git, [stellar-cli](https://developers.stellar.org/docs/tools/cli) 28.x on `PATH` (or `STELLAR_BIN`).
+
+```sh
+git clone https://github.com/ttimesai-star/agentleash-escrow && cd agentleash-escrow
+npm ci
+npm run try        # keys -> friendbot XLM -> testnet USDC from the DEX -> deploy -> release402 -> refund
+```
+
+What it does, step by step (`scripts/try-it.ts`):
+
+1. Makes three new testnet keys (owner, agent, seller) in `~/.agentleash/testnet-keys.json` (override with
+   `AL_KEYS_FILE`; never written into the repo) and funds them with friendbot.
+2. Adds a USDC trustline for owner and seller; the owner buys 60 testnet USDC (Circle) for about 75 testnet XLM on the
+   testnet DEX (path payment, capped at 250 XLM).
+3. Deploys your vault (limits 10 USDC per call, 25 USDC per hour), allow-lists your seller, funds the vault.
+4. `release402`: the seller answers `402` with its terms, the agent pays into a Trustless Work escrow through the
+   vault, the seller checks the escrow on chain, serves, and settles with its receipt (+1.994 of 2 USDC; TW keeps 0.3%).
+5. `refund`: the agent pays 1 USDC with a 60 s deadline, the seller is silent, a late receipt is refused (`#11`), the
+   refund returns 0.997 USDC to the vault, and a receipt after the refund is refused (`#10`).
+
+At the end it prints stellar.expert links to your transactions. Sharing is optional: if you are willing, open an
+issue titled "Testnet session" with your vault address (public testnet data). Problems and confusing steps are just as
+useful: open an issue with the output. The run overwrites `deployments/testnet.json` in your clone
+(`git checkout deployments/testnet.json` restores ours).
+
 ## Known limits (honest list)
 
 - **Fees:** Trustless Work keeps 0.3% on both paths — a refund returns 99.7%. `platform_fee` is 0.

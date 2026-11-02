@@ -18,8 +18,9 @@ const up = (name: string) => {
   txs[`upload_${name}`] = r.tx;
   return r.out;
 };
-const resolverHash = up("leash_resolver");
-const vaultHash = up("leash_vault");
+// VAULT_WASM_HASH / RESOLVER_WASM_HASH: deploy code already uploaded to testnet (no local build; used by npm run try).
+const resolverHash = process.env.RESOLVER_WASM_HASH || up("leash_resolver");
+const vaultHash = process.env.VAULT_WASM_HASH || up("leash_vault");
 
 // The resolver address is fixed in advance by (deployer, salt), so each contract can be built knowing the other.
 const salt = randomBytes(32).toString("hex");

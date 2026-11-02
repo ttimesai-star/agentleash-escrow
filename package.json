@@ -16,7 +16,8 @@
     "demo:refund-all": "node scripts/demo.ts refund-all",
     "log:export": "node scripts/log.ts export",
     "log:verify": "node scripts/log.ts verify",
-    "demo:release402": "node scripts/demo.ts release402"
+    "demo:release402": "node scripts/demo.ts release402",
+    "try": "node scripts/try-it.ts"
   },
   "dependencies": {
     "@stellar/stellar-sdk": "17.4.0"
