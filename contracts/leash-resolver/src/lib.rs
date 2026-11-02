@@ -26,6 +26,7 @@ pub struct LeashResolver;
 impl LeashResolver {
     pub fn __constructor(env: Env, vault: Address) {
         env.storage().instance().set(&VAULT, &vault);
+        env.storage().instance().extend_ttl(17_280, 518_400);
     }
 
     /// Resolve a disputed escrow: the whole escrow balance goes to `to` (TW takes its 0.3% fee).

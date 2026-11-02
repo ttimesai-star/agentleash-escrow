@@ -644,3 +644,11 @@ fn every_flow_emits_its_vault_event() {
     };
     assert_eq!(t.env.events().all().filter_by_contract(&t.vault), [ev(&t, &cfg)]);
 }
+
+#[test]
+fn resolver_instance_ttl_is_extended_at_deploy() {
+    let t = setup();
+    use soroban_sdk::testutils::storage::Instance as _;
+    let ttl = t.env.as_contract(&t.resolver, || t.env.storage().instance().get_ttl());
+    assert_eq!(ttl, TTL_MAX);
+}
